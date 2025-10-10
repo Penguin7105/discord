@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Discord Sender</title>
+</head>
+<body>
+  <h2>send a message</h2>
+
+  <!-- channel selector -->
+  <label for="channel">choose a channel:</label>
+  <select id="channel">
+    <option value="general">general</option>
+    <option value="memes">memes</option>
+    <option value="games">games</option>
+    <option value="music">music</option>
+    <option value="feedback">feedback</option>
+  </select>
+
+  <br><br>
+
+  <!-- message box -->
+  <textarea id="message" rows="5" cols="40" placeholder="type your message here..."></textarea>
+  <br><br>
+
+  <button onclick="sendMessage()">send</button>
+
+<widgetbot
+  server="1383175279639265340"
+  width="800"
+  height="600">
+</widgetbot>
+<script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+
+  
+  <script>
+    // map internal names to webhook URLs
+    const webhooks = {
+      general: "https://discord.com/api/webhooks/1383547795516166296/z7QC7ulSNT-C6Nc2c9jimDEnKM-FdzB3yPTIHmFKzafb6Cpeta93EdgG3Ut3GP8gXHjy",
+      memes: "https://discord.com/api/webhooks/1384669505137021039/hejxG1nm4iKopA37TqxDIWOyCqiSQvkX3aVFQUh_tU7LMrIlmc9rV4TQoLitA5QKxPxL",
+      games: "https://discord.com/api/webhooks/1412255671117680790/XXXysAnfNoiwFNLndg-wLwlFydyn39h4f2Ec7gRGdNS08gr_3yYj6ml-0riVueUaD0GT",
+      music: "https://discord.com/api/webhooks/1412255937418498088/HMdRK-jhQGQOXatoUwOcTr-qTY3F1lL56-r3Z-6xoyBf_BQ28Dvgiu_xoqVd1EBiG7Su",
+      feedback: "https://discord.com/api/webhooks/1413675446003957830/rpib5fDG2B2uVkb5yxY1JYoOXecl33SHboIMjOdOc1rWYa-bBtzUn74FoI1kF5cxq9Pi"
+    };
+
+    // fixed username and avatar (only changeable here in the code)
+    const fixedUsername = "Testing";
+    const fixedAvatar = "https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg";
+
+    async function sendMessage() {
+      const channel = document.getElementById("channel").value;
+      const message = document.getElementById("message").value;
+
+      if (!message) {
+        alert("please enter a message first!");
+        return;
+      }
+
+      const webhookUrl = webhooks[channel];
+
+      const payload = {
+        username: fixedUsername,
+        avatar_url: fixedAvatar,
+        content: message
+      };
+
+      try {
+        const response = await fetch(webhookUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          alert("message sent!");
+          document.getElementById("message").value = "";
+        } else {
+          alert("failed to send message");
+        }
+      } catch (err) {
+        alert("error: " + err);
+      }
+    }
+  </script>
+</body>
+</html>
